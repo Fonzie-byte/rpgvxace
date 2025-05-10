@@ -105,9 +105,12 @@ class Window_Base < Window
   # @return [Array<Integer>]
   def get_value_in_currencies(value)
     coins = []
-    VALUES.reverse.each_with_index { |val, i|
-      while value >= val
-        value -= val
+    VALUES.reverse.each_with_index { |coin_val, i|
+      if value < coin_val
+        coins[i] = 0
+      end
+      while value >= coin_val
+        value -= coin_val
         coins[i] = coins.fetch(i, 0) + 1
       end
     }
@@ -142,8 +145,8 @@ class Window_Base < Window
     coins = get_value_in_currencies(value)
     text = ""
     width = 0
-    coins.each {|val|
-      if !val.nil?
+    coins.each { |val|
+      if val.is_a?(Numeric) && val > 0
         width += icon_width
       end
     }
