@@ -32,15 +32,22 @@ module H87_GoldSetup
   #===============================================================================
   # ** CONFIGURATION **
   #===============================================================================
-  #Insert the proper icons'ID:
-  ICONBRONZE = 140 #bronze coin icon
-  ICONSILVER = 141 #silver coin icon
-  ICONGOLD = 361 #gold coin icon
+  #Insert the proper icons' ID
+  #You can add or remove lines to have more currencies
+  #Every line must end with a comma (,)
+  ICONS = [
+    140, #bronze coin icon
+    141, #silver coin icon
+    361, #gold coin icon
+  ]
 
   #If you want, you can set different values for every value:
-  VALUEBRONZE = 1 #1 bronze coin, don't change
-  VALUESILVER = 100 #100 bronze coins
-  VALUEGOLD = 100 #100 silver coins
+  #This needs to have exactly 1 line for each line in ICONS!
+  VALUES = [
+    1, #1 bronze coin is 1G, don't change
+    100, #1 silver coin is 100G
+    10_000, #1 gold coin is 10 000G
+  ]
 
   #Set this constant to true if you want that the digits will overlay a part of
   #the icon, saving space.
@@ -74,55 +81,37 @@ class Window_Base < Window
       value *= -1
     end
     icon_width = IconOverlay ? 12 : 22
-    bronzes = get_bronzes(value)
-    silvers = get_silvers(value)
-    golds = get_golds(value)
+    in_currencies = get_value_in_currencies(value)
     w2 = width
-    if bronzes > 0
-      draw_icon(ICONBRONZE, x + w2 - 24, y)
-      w2 -= icon_width
-      w1 = text_size(bronzes).width
-      draw_text(x, y, w2, line_height, bronzes, 2)
-      w2 -= w1
-    end
-    if silvers > 0
-      draw_icon(ICONSILVER, x + w2 - 24, y)
-      w2 -= icon_width
-      w1 = text_size(silvers).width
-      draw_text(x, y, w2, line_height, silvers, 2)
-      w2 -= w1
-    end
-    if golds > 0
-      draw_icon(ICONGOLD, x + w2 - 24, y)
-      w2 -= icon_width
-      w1 = text_size(golds).width
-      draw_text(x, y, w2, line_height, golds, 2)
-      w2 -= w1
-    end
+    ICONS.each_with_index { |ico, i|
+      val = in_currencies.fetch(i, nil)
+      if !val.nil?
+        draw_icon(ico, x + w2 - 24, y)
+        w2 -= icon_width
+        w1 = text_size(val).width
+        draw_text(x, y, w2, line_height, val, 2)
+        w2 -= w1
+      end
+    }
     if @negative #draws a minus with negative numbers
       draw_text(x, y, w2, line_height, "-", 2)
     end
   end
 
   #--------------------------------------------------------------------------
-  # * Returns the bronze coins from value
+  # * Returns how many of each coin are needed for the value
   #--------------------------------------------------------------------------
-  def get_bronzes(value)
-    value % VALUESILVER
-  end
-
-  #--------------------------------------------------------------------------
-  # * Returns the silver coins from value
-  #--------------------------------------------------------------------------
-  def get_silvers(value)
-    value / VALUESILVER % VALUEGOLD
-  end
-
-  # Returns the gold coins from value
   # @param [Integer] value
-  # @return [Fixnum]
-  def get_golds(value)
-    value / VALUESILVER / VALUEGOLD
+  # @return [Array<Integer>]
+  def get_value_in_currencies(value)
+    coins = []
+    VALUES.reverse.each_with_index { |val, i|
+      while value >= val
+        value -= val
+        coins[i] = coins.fetch(i, 0) + 1
+      end
+    }
+    coins.reverse
   end
 
   # * alias process_escape_character
@@ -150,23 +139,14 @@ class Window_Base < Window
   # @return [Integer]
   def calc_currency_width(value)
     icon_width = IconOverlay ? 12 : 22
-    bronzes = get_bronzes(value)
-    silvers = get_silvers(value)
-    golds = get_golds(value)
+    coins = get_value_in_currencies(value)
     text = ""
     width = 0
-    if bronzes > 0
-      text += bronzes.to_s
-      width += icon_width
-    end
-    if silvers > 0
-      text += silvers.to_s
-      width += icon_width
-    end
-    if golds > 0
-      text += golds.to_s
-      width += icon_width
-    end
+    coins.each {|val|
+      if !val.nil?
+        width += icon_width
+      end
+    }
     width + text_size(text).width
   end
 end
