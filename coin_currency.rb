@@ -124,7 +124,6 @@ class Window_Base < Window
   # @param [String] text
   # @param [Integer] pos
   def process_escape_character(code, text, pos)
-    # Todo
     return process_draw_coins(obtain_escape_param(text), pos) if code.upcase == 'M'
     goldp_e_c(code, text, pos)
   end
@@ -133,7 +132,6 @@ class Window_Base < Window
   # @param [Integer] value
   # @param [Integer] pos
   def process_draw_coins(value, pos)
-    # Todo
     width = calc_currency_width(value)
     draw_currency_value(value, "", pos[:x], pos[:y], width)
     pos[:x] += width
@@ -143,7 +141,6 @@ class Window_Base < Window
   # @param [Integer] value
   # @return [Integer]
   def calc_currency_width(value)
-    # Todo
     icon_width = IconOverlay ? 12 : 24
     coins = get_value_in_currencies(value)
     text = ""
