@@ -73,7 +73,7 @@ class Window_Base < Window
       @negative = true
       value *= -1
     end
-    icon_width = IconOverlay ? 12 : 24
+    icon_width = IconOverlay ? 12 : 22
     bronzes = get_bronzes(value)
     silvers = get_silvers(value)
     golds = get_golds(value)
@@ -149,7 +149,7 @@ class Window_Base < Window
   # @param [Integer] value
   # @return [Integer]
   def calc_currency_width(value)
-    icon_width = IconOverlay ? 12 : 24
+    icon_width = IconOverlay ? 12 : 22
     bronzes = get_bronzes(value)
     silvers = get_silvers(value)
     golds = get_golds(value)
