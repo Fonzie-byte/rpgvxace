@@ -80,7 +80,7 @@ class Window_Base < Window
       @negative = true
       value *= -1
     end
-    icon_width = IconOverlay ? 12 : 22
+    icon_width = IconOverlay ? 12 : 24
     in_currencies = get_value_in_currencies(value)
     w2 = width
     ICONS.each_with_index { |ico, i|
@@ -138,7 +138,7 @@ class Window_Base < Window
   # @param [Integer] value
   # @return [Integer]
   def calc_currency_width(value)
-    icon_width = IconOverlay ? 12 : 22
+    icon_width = IconOverlay ? 12 : 24
     coins = get_value_in_currencies(value)
     text = ""
     width = 0
