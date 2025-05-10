@@ -85,7 +85,7 @@ class Window_Base < Window
     w2 = width
     ICONS.each_with_index { |ico, i|
       val = in_currencies.fetch(i, nil)
-      if !val.nil?
+      if val.is_a?(Numeric) && val > 0
         draw_icon(ico, x + w2 - 24, y)
         w2 -= icon_width
         w1 = text_size(val).width
