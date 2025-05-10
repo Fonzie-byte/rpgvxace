@@ -146,7 +146,6 @@ class Window_Base < Window
     text = ""
     width = 0
     coins.each_with_index { |val, i|
-      $game_variables[11 + i] = val
       if val.is_a?(Numeric) && val > 0
         text += val.to_s
         width += icon_width
